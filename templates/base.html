@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+            Blog Engene
+        {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'post_list' %}">Posts</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'tags_list_url' %}">Tags</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </li>
+    </ul>
+
+
+    <form class="form-inline my-2 my-lg-0" action="{% url 'posts_list' %}">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+
+
+  </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-6">
+            {% block content %}
+                There is no any content
+            {% endblock %}
+            {% if is_paginated %}
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item {% if not prev_url %} disabled {% endif %}">
+                            <a class="page-link" href="{{ prev_url }}" tabindex="-1" aria-disabled="true">Previous</a>
+                        </li>
+
+                        {% for i in page_object.paginator.page_range %}
+                            {% if page_object.number == n %}
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="?page={{ n }}">{{ n }} <span class="sr-only">(current)</span></a>
+                            </li>
+                            {% elif n > page_object|add:-3 and n < page_object|add:3 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ n }}">{{ n }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li class="page-item {% if not next_url %} disabled {% endif %}">
+                            <a class="page-link" href="{{ next_url }}" tabindex="-1" aria-disabled="true">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if request.user.is_authenticated and request.user.is_staff %}
+<div class="admin-panel align-center">
+    <a href="/admin" class="btn btn-outline-info">Admin</a>
+    {% block admin-panel %}
+        <a href="" class="btn btn-light">Create</a>
+        <a href="{{ admin_object.get_update_url }}" class="btn btn-light edit" style="{% if detail%}display:block{% endif %}">Edit</a>
+        <a href="{{ admin_object.get_delete_url }}" class="btn btn-danger delete" style="{% if detail%}display:block{% endif %}">Delete</a>
+    {% endblock %}
+</div>
+{% endif %}
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+</body>
+</html>

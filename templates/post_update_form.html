@@ -1,0 +1,24 @@
+{%  extends 'base.html' %}
+{% block title %}
+    Post Update
+{% endblock %}
+
+{% block content %}
+
+<form action="{{ post.get_update_url }}" method="post">
+    {% csrf_token %}
+    {% for elem in form %}
+    <div class="form-group">
+        {% if elem.errors %}
+            <div class="alert alert-danger">
+                {{ elem.error }}
+            </div>
+        {% endif %}
+        {{ elem.label}}
+        {{ elem }}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Update Post</button>
+</form>
+
+{% endblock %}

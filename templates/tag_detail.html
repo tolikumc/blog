@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ tag.title }}
+{% endblock %}
+{% block content %}
+<h1 class="mb-5"> Posts with '{{ tag.title|title }}' tag</h1>
+    {% for elem in tag.posts.all %}
+    {% include 'post_card_templates.html' %}
+    {%  endfor %}
+{% endblock %}
